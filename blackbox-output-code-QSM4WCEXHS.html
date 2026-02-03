@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine? 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Dancing Script', cursive;
+            background: linear-gradient(135deg, #ffe6f2, #ffb3d9, #ff99cc);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            position: relative;
+        }
+        /* Floating hearts background */
+        .heart {
+            position: absolute;
+            font-size: 2rem;
+            color: #ff69b4;
+            animation: float 6s infinite linear;
+            opacity: 0.7;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        /* Cute stickers */
+        .sticker {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            animation: bounce 3s infinite ease-in-out;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        /* Main text */
+        #main-text {
+            font-size: 2.5rem;
+            color: #d63384;
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        /* Buttons */
+        button {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        #yes-btn {
+            background: linear-gradient(45deg, #ff1493, #ff69b4);
+            color: white;
+            font-size: 2rem;
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            0% { box-shadow: 0 0 10px #ff1493; }
+            100% { box-shadow: 0 0 20px #ff69b4; }
+        }
+        #no-btn {
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        /* Hearts burst animation */
+        .heart-burst {
+            position: absolute;
+            font-size: 3rem;
+            color: #ff1493;
+            animation: burst 1s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes burst {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(360deg); opacity: 0; }
+        }
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            #main-text { font-size: 2rem; }
+            button { font-size: 1.2rem; padding: 0.8rem 1.5rem; }
+            #yes-btn { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="heart" style="left: 10%; animation-delay: 0s;">💖</div>
+    <div class="heart" style="left: 20%; animation-delay: 1s;">❤️</div>
+    <div class="heart" style="left: 30%; animation-delay: 2s;">💕</div>
+    <div class="heart" style="left: 40%; animation-delay: 3s;">💘</div>
+    <div class="heart" style="left: 50%; animation-delay: 4s;">💓</div>
+    <div class="heart" style="left: 60%; animation-delay: 5s;">💗</div>
+    <div class="heart" style="left: 70%; animation-delay: 6s;">💞</div>
+    <div class="heart" style="left: 80%; animation-delay: 7s;">💝</div>
+    <div class="heart" style="left: 90%; animation-delay: 8s;">💟</div>
+
+    <!-- Cute stickers -->
+    <div class="sticker" style="top: 10%; left: 5%;">🐻</div>
+    <div class="sticker" style="top: 20%; right: 10%;">🐱</div>
+    <div class="sticker" style="bottom: 15%; left: 15%;">🌸</div>
+    <div class="sticker" style="bottom: 25%; right: 5%;">🏹</div>
+    <div class="sticker" style="top: 50%; left: 50%;">💕</div>
+
+    <!-- Main content -->
+    <div id="main-text">Will you be my Valentine? 💖🥰</div>
+    <button id="yes-btn">YES 💘</button>
+    <button id="no-btn">NO 🙈</button>
+
+    <!-- Optional background music (replace with your own MP3) -->
+    <audio id="romantic-music" loop>
+        <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav"> <!-- Placeholder; use a romantic track like a soft piano loop -->
+    </audio>
+
+    <script>
+        const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
+        const mainText = document.getElementById('main-text');
+        const music = document.getElementById('romantic-music');
+        let dodgeCount = 0;
+
+        // NO button dodge behavior
+        function dodge() {
+            if (dodgeCount < 5) {
+                const x = Math.random() * (window.innerWidth - 100);
+                const y = Math.random() * (window.innerHeight - 100);
+                noBtn.style.position = 'absolute';
+                noBtn.style.left = `${x}px`;
+                noBtn.style.top = `${y}px`;
+                dodgeCount++;
+            } else {
+                // After 5 dodges, transform into YES
+                noBtn.style.transform = 'scale(0.5)';
+                noBtn.style.opacity = '0.5';
+                setTimeout(() => {
+                    noBtn.textContent = 'YES 💕 (Gotcha!)';
+                    noBtn.style.background = 'linear-gradient(45deg, #ff1493, #ff69b4)';
+                    noBtn.style.color = 'white';
+                    noBtn.addEventListener('click', yesClicked);
+                }, 1000);
+            }
+        }
+
+        // Add event listeners for dodge (works on desktop hover and mobile touch)
+        noBtn.addEventListener('mouseenter', dodge);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            dodge();
+        });
+
+        // YES button click
+        function yesClicked() {
+            // Confetti explosion
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            // Hearts burst animation
+            for (let i = 0; i < 10; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-burst';
+                heart.textContent = '💖';
+                heart.style.left = `${Math.random() * 100}%`;
+                heart.style.top = `${Math.random() * 100}%`;
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 1000);
+            }
+
+            // Change text
+            mainText.textContent = 'YAY!!! I love you ❤️ You’re my Valentine 💐🥹';
+            mainText.style.animation = 'none'; // Stop pulsing
+
+            // Play music
+            music.play();
+
+            // Hide buttons
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+        }
+
+        yesBtn.addEventListener('click', yesClicked);
+    </script>
+</body>
+</html>
